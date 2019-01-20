@@ -1,4 +1,5 @@
 from selenium import webdriver
+import re
 from selenium.webdriver.common.by import By
 
 from selenium.webdriver.common import by
@@ -46,9 +47,9 @@ for i in spisok[28:]:
     new_driver.close()
 print(full_listmonth)
 
-
+titles_articles = []
 links_articles = []
-for t in full_listmonth:
+for t in full_listmonth[5:7]:
     new_driver_art = webdriver.Firefox()
     new_driver_art.get(t)
     center = new_driver_art.find_element_by_class_name('issue')
@@ -56,11 +57,25 @@ for t in full_listmonth:
     for y in after_center:
         if y.text:
             wh = y.get_attribute('href')
+            name = y.text
             links_articles.append(wh)
+            titles_articles.append(name)
+
     new_driver_art.close()
-print(links_articles)
 
 
 #print(i.get_attribute('href')[1:3])
 
 driver.quit()
+
+dict = {}
+for x, y in zip(titles_articles, links_articles):
+    dict[x] = y
+print(dict)
+
+list_matchings = []
+for i in titles_articles:
+    matching = re.findall(r'машин', i, re.IGNORECASE)
+    if matching:
+        list_matchings.append(matching)
+print(list_matchings)
